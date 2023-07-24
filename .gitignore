@@ -1,1 +1,5 @@
 *.afdesign
+bin/
+obj/
+.vs/
+.git/
