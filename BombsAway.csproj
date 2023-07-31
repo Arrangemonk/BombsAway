@@ -150,6 +150,9 @@
     <None Update="Data\Images\hospital_inside.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Images\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Images\restart.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

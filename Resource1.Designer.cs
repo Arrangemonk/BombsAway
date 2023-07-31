@@ -61,6 +61,15 @@ namespace BombsAway {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ame(Hard).
+        /// </summary>
+        internal static string Ame {
+            get {
+                return ResourceManager.GetString("Ame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data/Audio/.
         /// </summary>
         internal static string audio {
@@ -97,6 +106,15 @@ namespace BombsAway {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gura (Easy).
+        /// </summary>
+        internal static string Gura {
+            get {
+                return ResourceManager.GetString("Gura", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data/Images/.
         /// </summary>
         internal static string images {
@@ -111,6 +129,15 @@ namespace BombsAway {
         internal static string MaxScore {
             get {
                 return ResourceManager.GetString("MaxScore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to presents.
+        /// </summary>
+        internal static string Presents {
+            get {
+                return ResourceManager.GetString("Presents", resourceCulture);
             }
         }
         
