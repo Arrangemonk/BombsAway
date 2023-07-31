@@ -431,7 +431,7 @@ public class Program
             }
             else
             {
-                var speed = bombs[i].Item2 += 0.2f;
+                var speed = bombs[i].Item2 += 0.216f;
                 var pos = bombs[i].Item1 with { Y = bombs[i].Item1.Y + bombs[i].Item2 };
                 bombs[i] = (pos, speed);
 
