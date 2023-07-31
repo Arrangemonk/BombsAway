@@ -126,6 +126,9 @@
   <data name="font" xml:space="preserve">
     <value>Data/Fonts/ComicNeue-Bold.ttf</value>
   </data>
+  <data name="fontlogo" xml:space="preserve">
+    <value>Data/Fonts/OpenSans.ttf</value>
+  </data>
   <data name="images" xml:space="preserve">
     <value>Data/Images/</value>
   </data>

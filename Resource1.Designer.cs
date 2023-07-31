@@ -88,6 +88,15 @@ namespace BombsAway {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data/Fonts/OpenSans.ttf.
+        /// </summary>
+        internal static string fontlogo {
+            get {
+                return ResourceManager.GetString("fontlogo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data/Images/.
         /// </summary>
         internal static string images {
