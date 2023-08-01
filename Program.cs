@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
@@ -57,7 +58,7 @@ public class Program
 
     private Texture2D character;
     private Texture2D gameOverBackground;
-    private Texture2D StageBackground;
+    private Texture2D stageBackground;
 
     private Sound sound;
     private Sound gameOverSound;
@@ -85,6 +86,7 @@ public class Program
 
     public static void Main()
     {
+        Directory.SetCurrentDirectory(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]));
         var porgram = new Program();
         porgram.Init();
         porgram.Run();
@@ -435,7 +437,7 @@ public class Program
         {
             StopMusicStream(stageMusic);
             PlayMusicStream(stageMusic);
-            playerposition = new Vector2(Width * .5f - character.width * 0.5f, 500);
+            playerposition = new Vector2(MathF.Floor(Width * .5f - character.width * 0.5f), 500);
         }
         if (collided)
         {
@@ -450,25 +452,25 @@ public class Program
         var movement = 5f + bombcount * 0.2f;
         if (IsKeyDown(KeyboardKey.KEY_LEFT) || IsKeyDown(KeyboardKey.KEY_A))
         {
-            playerposition = playerposition with { X = MathF.Max(0.0f, playerposition.X - movement) };
+            playerposition = playerposition with { X = MathF.Floor(MathF.Max(0.0f, playerposition.X - movement)) };
         }
         if (IsKeyDown(KeyboardKey.KEY_RIGHT) || IsKeyDown(KeyboardKey.KEY_D))
         {
-            playerposition = playerposition with { X = MathF.Min(Width - character.width * 0.5f, playerposition.X + movement) };
+            playerposition = playerposition with { X = MathF.Floor(MathF.Min(Width - character.width * 0.5f, playerposition.X + movement)) };
         }
         UpdateMusicStream(stageMusic);
-        DrawTexture(StageBackground, 0, 0, Color.WHITE);
+        DrawTexture(stageBackground, 0, 0, Color.WHITE);
 
         DrawTextureEx(character, playerposition, 0, .5f, Color.WHITE);
         DrawTextEx(font, string.Format(Resource1.Score, timer), new Vector2(10, 10), 35, 0, Color.SKYBLUE);
 
-        updateBombs();
+        UpdateBombs();
 
         timer++;
 
     }
 
-    private void updateBombs()
+    private void UpdateBombs()
     {
         if (timer % newbombcounter == (newbombcounter - 1))
             bombcount = Math.Min(bombs.Length, bombcount + 1);
@@ -515,7 +517,7 @@ public class Program
         {
             character = gura;
             gameOverBackground = gameOverGura;
-            StageBackground = stageGura;
+            stageBackground = stageGura;
 
             sound = guraSound;
             gameOverSound = guraGameover;
@@ -528,7 +530,7 @@ public class Program
 
             character = ame;
             gameOverBackground = gameOverAme;
-            StageBackground = stageAme;
+            stageBackground = stageAme;
 
             sound = ameSound;
             gameOverSound = ameGameover;

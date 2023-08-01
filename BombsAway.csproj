@@ -112,13 +112,13 @@
     <None Update="Data\Audio\stage_ame.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Audio\stage_ame.ogg">
+    <None Update="Data\Audio\stage_gura.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\Audio\stage_gura.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Audio\stage_gura.ogg">
+    <None Update="Data\Audio\stage_ame.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\ComicNeue-Bold.ttf">
