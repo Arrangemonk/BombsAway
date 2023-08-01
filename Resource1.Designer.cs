@@ -88,6 +88,15 @@ namespace BombsAway {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Press C for Credits.
+        /// </summary>
+        internal static string CForCredits {
+            get {
+                return ResourceManager.GetString("CForCredits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data/Fonts/ComicNeue-Bold.ttf.
         /// </summary>
         internal static string font {
@@ -142,7 +151,7 @@ namespace BombsAway {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Press &quot;B&quot; to return to Menu.
+        ///   Looks up a localized string similar to Press B to return to Menu.
         /// </summary>
         internal static string PressBToReturnToMenu {
             get {
@@ -151,7 +160,7 @@ namespace BombsAway {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Press &quot;R&quot; to restart.
+        ///   Looks up a localized string similar to Press R to restart.
         /// </summary>
         internal static string PressRToRestart {
             get {
@@ -174,6 +183,15 @@ namespace BombsAway {
         internal static string Score {
             get {
                 return ResourceManager.GetString("Score", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data/score.txt.
+        /// </summary>
+        internal static string Scorefile {
+            get {
+                return ResourceManager.GetString("Scorefile", resourceCulture);
             }
         }
     }

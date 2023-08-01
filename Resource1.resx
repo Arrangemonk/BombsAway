@@ -126,6 +126,9 @@
   <data name="BombsAway" xml:space="preserve">
     <value>Bombs A Way</value>
   </data>
+  <data name="CForCredits" xml:space="preserve">
+    <value>Press C for Credits</value>
+  </data>
   <data name="font" xml:space="preserve">
     <value>Data/Fonts/ComicNeue-Bold.ttf</value>
   </data>
@@ -145,15 +148,18 @@
     <value>presents</value>
   </data>
   <data name="PressBToReturnToMenu" xml:space="preserve">
-    <value>Press "B" to return to Menu</value>
+    <value>Press B to return to Menu</value>
   </data>
   <data name="PressRToRestart" xml:space="preserve">
-    <value>Press "R" to restart</value>
+    <value>Press R to restart</value>
   </data>
   <data name="PressSpaceToStart" xml:space="preserve">
     <value>Press SPACE to start</value>
   </data>
   <data name="Score" xml:space="preserve">
     <value>Score: {0}</value>
+  </data>
+  <data name="Scorefile" xml:space="preserve">
+    <value>Data/score.txt</value>
   </data>
 </root>

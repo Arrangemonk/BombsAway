@@ -18,6 +18,7 @@ public class Program
 {
     private int timer = 0;
     private int newbombcounter = 0;
+    private int padding = 0;
     private bool collided = false;
     private Random rnd;
     private int bombcount = 0;
@@ -31,6 +32,8 @@ public class Program
     private Texture2D splashscreen;
     private Texture2D tilescreen;
     private Texture2D characterselect;
+    private Texture2D creditscreen;
+    private Texture2D credits;
 
     private Texture2D ame;
     private Texture2D gameOverAme;
@@ -48,6 +51,7 @@ public class Program
 
     private Music ameStage;
     private Music guraStage;
+    private Music creditmusic;
 
 
 
@@ -168,6 +172,8 @@ public class Program
         tilescreen = LoadTexture(Path.Combine(Resource1.images, "titlescreen.png"));
         characterselect = LoadTexture(Path.Combine(Resource1.images, "character_Select.png"));
         bomb = LoadTexture(Path.Combine(Resource1.images, "bomb.png"));
+        creditscreen = LoadTexture(Path.Combine(Resource1.images, "hospital_inside.png"));
+        credits = LoadTexture(Path.Combine(Resource1.images, "credits.png"));
 
 
         ame = LoadTexture(Path.Combine(Resource1.images, "ame.png"));
@@ -183,15 +189,16 @@ public class Program
         stageGura = LoadTexture(Path.Combine(Resource1.images, "stage_gura.png"));
 
 
-        ameSound = LoadSound(Path.Combine(Resource1.audio, "ame.mp3"));
-        guraSound = LoadSound(Path.Combine(Resource1.audio, "gura.mp3"));
-        ameGameover = LoadSound(Path.Combine(Resource1.audio, "game_over_ame.mp3"));
-        guraGameover = LoadSound(Path.Combine(Resource1.audio, "game_over_gura.mp3"));
-        ameStage = LoadMusicStream(Path.Combine(Resource1.audio, "stage_ame.mp3"));
-        guraStage = LoadMusicStream(Path.Combine(Resource1.audio, "stage_gura.mp3"));
-        intro = LoadMusicStream(Path.Combine(Resource1.audio, "intro.mp3"));
-        characterSelect = LoadMusicStream(Path.Combine(Resource1.audio, "character select.mp3"));
-        logo = LoadSound(Path.Combine(Resource1.audio, "logo.mp3"));
+        ameSound = LoadSound(Path.Combine(Resource1.audio, "ame.ogg"));
+        guraSound = LoadSound(Path.Combine(Resource1.audio, "gura.ogg"));
+        ameGameover = LoadSound(Path.Combine(Resource1.audio, "game_over_ame.ogg"));
+        guraGameover = LoadSound(Path.Combine(Resource1.audio, "game_over_gura.ogg"));
+        ameStage = LoadMusicStream(Path.Combine(Resource1.audio, "stage_ame.ogg"));
+        guraStage = LoadMusicStream(Path.Combine(Resource1.audio, "stage_gura.ogg"));
+        intro = LoadMusicStream(Path.Combine(Resource1.audio, "intro.ogg"));
+        characterSelect = LoadMusicStream(Path.Combine(Resource1.audio, "character select.ogg"));
+        creditmusic = LoadMusicStream(Path.Combine(Resource1.audio, "credits.ogg"));
+        logo = LoadSound(Path.Combine(Resource1.audio, "logo.ogg"));
 
 
         rtex = LoadRenderTexture((int)Width, (int)Width);
@@ -203,6 +210,12 @@ public class Program
 
         bgColor = new Color(0, 0, 0, 0);
         Reset();
+        if (!File.Exists(Resource1.Scorefile))
+            return;
+        var scorefile = File.ReadAllText(Resource1.Scorefile);
+        if (string.IsNullOrEmpty(scorefile))
+            return;
+        score = int.Parse(scorefile);
     }
 
     private void Dispose()
@@ -212,7 +225,8 @@ public class Program
         UnloadImage(icon);
         UnloadTexture(ame);
         UnloadTexture(gura);
-
+        UnloadTexture(creditscreen);
+        UnloadTexture(credits);
 
         UnloadTexture(bomb);
         UnloadTexture(splashscreen);
@@ -234,6 +248,7 @@ public class Program
         UnloadMusicStream(guraStage);
         UnloadMusicStream(intro);
         UnloadMusicStream(characterSelect);
+        UnloadMusicStream(creditmusic);
         UnloadSound(logo);
 
         UnloadRenderTexture(rtex);
@@ -285,15 +300,26 @@ public class Program
             timer = 0;
             return;
         }
+        if (IsKeyPressed(KeyboardKey.KEY_C))
+        {
+            gamestate = GameState.Credits;
+            timer = 0;
+            return;
+        }
         else
         {
             UpdateMusicStream(intro);
 
             DrawTexture(tilescreen, 0, 0, Color.WHITE);
 
-            if ((timer / 20) % 2 == 0)
+            if ((timer / 20) % 4 == 0)
                 DrawTextEx(font, Resource1.PressSpaceToStart,
                     new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.PressSpaceToStart, 35, 0).X / 2),
+                        (int)(Height * 0.85f)), 35, 0, Color.SKYBLUE);
+
+            if ((timer / 20) % 4 == 2)
+                DrawTextEx(font, Resource1.CForCredits,
+                    new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.CForCredits, 35, 0).X / 2),
                         (int)(Height * 0.85f)), 35, 0, Color.SKYBLUE);
 
             timer++;
@@ -358,6 +384,8 @@ public class Program
             StopSound(gameOverSound);
             gamestate = GameState.Start;
             timer = 0;
+            isgura = true;
+            CharacterSelected();
             return;
         }
         else
@@ -378,7 +406,28 @@ public class Program
 
     private void Credits()
     {
+        if (timer == 0)
+        {
+            StopMusicStream(creditmusic);
+            PlayMusicStream(creditmusic);
+        }
+        if (IsKeyPressed(KeyboardKey.KEY_B))
+        {
+            StopSound(gameOverSound);
+            gamestate = GameState.Start;
+            timer = 0;
+            isgura = true;
+            CharacterSelected();
+            return;
+        }
+        UpdateMusicStream(creditmusic);
+        DrawTexture(creditscreen, 0, 0, Color.WHITE);
 
+        DrawTexture(credits,(int)Width/2 - credits.width/ 2,400 -timer,Color.WHITE);
+
+        DrawTextEx(font, Resource1.PressBToReturnToMenu, new Vector2(Width * 0.5f - MeasureTextEx(font, Resource1.PressBToReturnToMenu, 35, 0).X * 0.5f, (Height - 100)), 35, 0,
+            ((timer / 30) % 2 == 1) ? Color.SKYBLUE : Color.BLUE);
+        timer++;
     }
     private void Stage()
     {
@@ -393,7 +442,10 @@ public class Program
             gamestate = GameState.End;
             PlaySound(gameOverSound);
             score = timer;
+            if (score < 100)
+                score = 69;//NICE
             maxscore = Math.Max(score, maxscore);
+            File.WriteAllText(Resource1.Scorefile, maxscore.ToString());
         }
         var movement = 5f + bombcount * 0.2f;
         if (IsKeyDown(KeyboardKey.KEY_LEFT) || IsKeyDown(KeyboardKey.KEY_A))
@@ -408,7 +460,7 @@ public class Program
         DrawTexture(StageBackground, 0, 0, Color.WHITE);
 
         DrawTextureEx(character, playerposition, 0, .5f, Color.WHITE);
-        DrawTextEx(font, string.Format(Resource1.Score,timer), new Vector2(10,10), 35, 0, Color.SKYBLUE);
+        DrawTextEx(font, string.Format(Resource1.Score, timer), new Vector2(10, 10), 35, 0, Color.SKYBLUE);
 
         updateBombs();
 
@@ -418,10 +470,10 @@ public class Program
 
     private void updateBombs()
     {
-        if (timer % newbombcounter == 0)
+        if (timer % newbombcounter == (newbombcounter - 1))
             bombcount = Math.Min(bombs.Length, bombcount + 1);
-        var prect = new Rectangle(playerposition.X, playerposition.Y, character.width*.5f, character.height*.5f);
-        //DrawRectangleLines((int)playerposition.X, (int)playerposition.Y, character.width/2, character.height/2, Color.RED);
+        var prect = new Rectangle(playerposition.X + padding, playerposition.Y + padding, character.width * .5f - padding * 2, character.height * .5f - padding * 2);
+        //DrawRectangleLines((int)playerposition.X + padding, (int)playerposition.Y + padding, character.width/2 -padding*2, character.height/2 -padding*2, Color.RED);
         for (int i = 0; i < bombcount; i++)
         {
             if (bombs[i].Item1.Y > 600 || bombs[i].Item1.X == 0)
@@ -435,10 +487,10 @@ public class Program
                 var pos = bombs[i].Item1 with { Y = bombs[i].Item1.Y + bombs[i].Item2 };
                 bombs[i] = (pos, speed);
 
-                var bombrect = new Rectangle(pos.X, pos.Y, bomb.width, bomb.height);
-                //DrawRectangleLines((int)pos.X, (int)pos.Y, bomb.width, bomb.height,Color.RED);
+                var bombrect = new Rectangle(pos.X + 2, pos.Y + 2, bomb.width - 14, bomb.height - 2);
+                //DrawRectangleLines((int)pos.X +2, (int)pos.Y +2, bomb.width -14, bomb.height -2,Color.RED);
 
-                if (CheckCollisionRecs(bombrect,prect))
+                if (CheckCollisionRecs(bombrect, prect))
                     collided = true;
                 DrawTextureEx(bomb, bombs[i].Item1, 0, 1, Color.WHITE);
 
@@ -468,7 +520,8 @@ public class Program
             sound = guraSound;
             gameOverSound = guraGameover;
             stageMusic = guraStage;
-            newbombcounter = 120;
+            newbombcounter = 345;
+            padding = 10;
         }
         else
         {
@@ -480,8 +533,8 @@ public class Program
             sound = ameSound;
             gameOverSound = ameGameover;
             stageMusic = ameStage;
-            newbombcounter = 90;
-
+            newbombcounter = 138;
+            padding = 2;
         }
     }
 }
