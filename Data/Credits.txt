@@ -1,13 +1,24 @@
-﻿-ART-
+﻿ART
 
-KUROHINA
+Title Art (Gura)
+Kurohina
 
--CODE-
+Character/Object Sprite Art
+Yukiiro Alice
 
-ARRANGEMONK
+CODE
 
--TESTING-
+Arrangemonk
 
-ARRANGEMONK
-KUROHINA
-YUKUSAI
+TESTING
+
+Arrangemonk
+Kurohina
+Yukusai
+Coins
+
+This is an unoffial
+parody Game based on
+Hololive VTubers
+
+2022-2023 ALICE Project

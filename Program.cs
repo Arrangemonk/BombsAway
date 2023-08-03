@@ -17,6 +17,8 @@ internal enum GameState
 }
 public class Program
 {
+    private const int Fontsize = 30;
+    private const int Spacing = 10;
     private int timer = 0;
     private int newbombcounter = 0;
     private int padding = 0;
@@ -34,7 +36,7 @@ public class Program
     private Texture2D tilescreen;
     private Texture2D characterselect;
     private Texture2D creditscreen;
-    private Texture2D credits;
+    private string creditText;
 
     private Texture2D ame;
     private Texture2D gameOverAme;
@@ -175,7 +177,7 @@ public class Program
         characterselect = LoadTexture(Path.Combine(Resource1.images, "character_Select.png"));
         bomb = LoadTexture(Path.Combine(Resource1.images, "bomb.png"));
         creditscreen = LoadTexture(Path.Combine(Resource1.images, "hospital_inside.png"));
-        credits = LoadTexture(Path.Combine(Resource1.images, "credits.png"));
+        creditText = File.ReadAllText("Data/Credits.txt").Replace("\r", "");
 
 
         ame = LoadTexture(Path.Combine(Resource1.images, "ame.png"));
@@ -228,7 +230,6 @@ public class Program
         UnloadTexture(ame);
         UnloadTexture(gura);
         UnloadTexture(creditscreen);
-        UnloadTexture(credits);
 
         UnloadTexture(bomb);
         UnloadTexture(splashscreen);
@@ -284,7 +285,7 @@ public class Program
         var color2 = new Color(203, 206, 249, (int)(255 * fract2 * fade));
 
         Raylib.DrawTexture(splashscreen, (int)startposx, (int)startposy, color);
-        DrawTextEx(fontlogo, Resource1.Presents, new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.Presents, 55, 0).X / 2), (int)(Height * 0.70f)), 55, 0, color2);
+        DrawTextEx(fontlogo, Resource1.Presents, new Vector2((int)(Width / 2 - MeasureTextEx(fontlogo, Resource1.Presents, 55, 0).X / 2), (int)(Height * 0.70f)), 55, 0, color2);
 
     }
 
@@ -316,13 +317,13 @@ public class Program
 
             if ((timer / 20) % 4 == 0)
                 DrawTextEx(font, Resource1.PressSpaceToStart,
-                    new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.PressSpaceToStart, 35, 0).X / 2),
-                        (int)(Height * 0.85f)), 35, 0, Color.SKYBLUE);
+                    new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.PressSpaceToStart, Fontsize, 0).X / 2),
+                        (int)(Height * 0.85f)), Fontsize, 0, Color.SKYBLUE);
 
             if ((timer / 20) % 4 == 2)
                 DrawTextEx(font, Resource1.CForCredits,
-                    new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.CForCredits, 35, 0).X / 2),
-                        (int)(Height * 0.85f)), 35, 0, Color.SKYBLUE);
+                    new Vector2((int)(Width / 2 - MeasureTextEx(font, Resource1.CForCredits, Fontsize, 0).X / 2),
+                        (int)(Height * 0.85f)), Fontsize, 0, Color.SKYBLUE);
 
             timer++;
         }
@@ -357,13 +358,13 @@ public class Program
         UpdateMusicStream(characterSelect);
         if ((timer / 20) % 2 == 0 || !isgura)
         {
-            DrawTextEx(font, Resource1.Gura, new Vector2(Width * .33f - MeasureTextEx(font, Resource1.Gura, 35, 0).X * 0.5f, 150)
-                , 35, 0, Color.SKYBLUE);
+            DrawTextEx(font, Resource1.Gura, new Vector2(Width * .33f - MeasureTextEx(font, Resource1.Gura, Fontsize, 0).X * 0.5f, 150)
+                , Fontsize, 0, Color.SKYBLUE);
         }
         if ((timer / 20) % 2 == 0 || isgura)
         {
-            DrawTextEx(font, Resource1.Ame, new Vector2(Width * .66f - MeasureTextEx(font, Resource1.Ame, 35, 0).X * 0.5f, 150)
-                , 35, 0, Color.SKYBLUE);
+            DrawTextEx(font, Resource1.Ame, new Vector2(Width * .66f - MeasureTextEx(font, Resource1.Ame, Fontsize, 0).X * 0.5f, 150)
+                , Fontsize, 0, Color.SKYBLUE);
         }
 
         DrawTexture(gura, (int)(Width * .33f - gura.width * 0.5f), 250, Color.WHITE);
@@ -393,14 +394,17 @@ public class Program
         else
         {
             DrawTextureEx(gameOverBackground, Vector2.Zero, 0, Width / gameOverBackground.width, Color.WHITE);
-            DrawTextEx(font, Resource1.PressRToRestart, new Vector2((Width * 0.53f), (Height - 165)), 35, 0,
+
+            var x = isgura ? 0.02f : 0.98f;
+            var alignment = isgura ? DawTextAligned.AlignLeft : DawTextAligned.AlignRight;
+            DawTextAligned.DrawTextAligned(font, Resource1.PressRToRestart, new Vector2((Width * x), (Height * 0.7f)), Fontsize, 0,alignment,
                 ((timer / 30) % 2 == 0) ? Color.SKYBLUE : Color.BLUE);
-            DrawTextEx(font, Resource1.PressBToReturnToMenu, new Vector2((Width * 0.53f), (Height - 130)), 35, 0,
+            DawTextAligned.DrawTextAligned(font, Resource1.PressBToReturnToMenu, new Vector2((Width * x), (Height *0.77f)), Fontsize, 0,alignment,
                 ((timer / 30) % 2 == 1) ? Color.SKYBLUE : Color.BLUE);
-            DrawTextEx(font, string.Format(Resource1.Score, score), new Vector2((Width * 0.53f), (Height - 95)), 35, 0,
+            DawTextAligned.DrawTextAligned(font, string.Format(Resource1.Score, score), new Vector2((Width * x), (Height *0.85f)), Fontsize, 0, alignment,
                 Color.SKYBLUE);
-            DrawTextEx(font, string.Format(Resource1.MaxScore, maxscore), new Vector2((Width * 0.53f), (Height - 60)),
-                35, 0, Color.SKYBLUE);
+            DawTextAligned.DrawTextAligned(font, string.Format(Resource1.MaxScore, maxscore), new Vector2((Width * x), (Height *0.92f)),
+                Fontsize, 0, alignment, Color.SKYBLUE);
 
             timer++;
         }
@@ -425,9 +429,17 @@ public class Program
         UpdateMusicStream(creditmusic);
         DrawTexture(creditscreen, 0, 0, Color.WHITE);
 
-        DrawTexture(credits,(int)Width/2 - credits.width/ 2,400 -timer,Color.WHITE);
+        var scroll = (int)MeasureTextEx(font, creditText, Fontsize, 10).Y * 1.5f;
 
-        DrawTextEx(font, Resource1.PressBToReturnToMenu, new Vector2(Width * 0.5f - MeasureTextEx(font, Resource1.PressBToReturnToMenu, 35, 0).X * 0.5f, (Height - 100)), 35, 0,
+        var y = Height - (timer % scroll);
+
+        DawTextAligned.DrawTextAligned(font, creditText, new Vector2(Width * 0.5f,y),Fontsize,Spacing, DawTextAligned.AlignCenter,Color.MAGENTA);
+
+        var overlay = Fontsize * 2;
+
+        DrawTextureRec(creditscreen, new Rectangle(0, Height - overlay, Width, Height), new Vector2(0,Height- overlay),Color.WHITE);
+
+        DrawTextEx(font, Resource1.PressBToReturnToMenu, new Vector2(Width * 0.5f - MeasureTextEx(font, Resource1.PressBToReturnToMenu, Fontsize, 0).X * 0.5f, (Height - overlay)), Fontsize, 0,
             ((timer / 30) % 2 == 1) ? Color.SKYBLUE : Color.BLUE);
         timer++;
     }
@@ -462,7 +474,7 @@ public class Program
         DrawTexture(stageBackground, 0, 0, Color.WHITE);
 
         DrawTextureEx(character, playerposition, 0, .5f, Color.WHITE);
-        DrawTextEx(font, string.Format(Resource1.Score, timer), new Vector2(10, 10), 35, 0, Color.SKYBLUE);
+        DrawTextEx(font, string.Format(Resource1.Score, timer), new Vector2(10, 10), Fontsize, 0, Color.SKYBLUE);
 
         UpdateBombs();
 

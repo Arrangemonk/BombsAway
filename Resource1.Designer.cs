@@ -97,7 +97,7 @@ namespace BombsAway {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data/Fonts/ComicNeue-Bold.ttf.
+        ///   Looks up a localized string similar to Data/Fonts/StarChoco-rgovx.ttf.
         /// </summary>
         internal static string font {
             get {
