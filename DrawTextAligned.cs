@@ -3,7 +3,7 @@ using Raylib_cs;
 
 namespace BombsAway;
 using static Raylib_cs.Raylib;
-public unsafe class DawTextAligned
+public static unsafe class TextAligned
 {
     public const int AlignLeft = 0;
     public const int AlignCenter = 1;

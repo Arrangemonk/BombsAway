@@ -13,13 +13,15 @@ internal enum GameState
     CharSel,
     Stage,
     End,
-    Credits
+    Credits,
+    Paused,
 }
 public class Program
 {
     private const int Fontsize = 30;
     private const int Spacing = 10;
     private int timer = 0;
+    private int preservedtimer = 0;
     private int newbombcounter = 0;
     private int padding = 0;
     private bool collided = false;
@@ -120,6 +122,9 @@ public class Program
                     break;
                 case GameState.Credits:
                     Credits();
+                    break;
+                case GameState.Paused:
+                    Paused();
                     break;
             }
 
@@ -396,14 +401,14 @@ public class Program
             DrawTextureEx(gameOverBackground, Vector2.Zero, 0, Width / gameOverBackground.width, Color.WHITE);
 
             var x = isgura ? 0.02f : 0.98f;
-            var alignment = isgura ? DawTextAligned.AlignLeft : DawTextAligned.AlignRight;
-            DawTextAligned.DrawTextAligned(font, Resource1.PressRToRestart, new Vector2((Width * x), (Height * 0.7f)), Fontsize, 0,alignment,
+            var alignment = isgura ? TextAligned.AlignLeft : TextAligned.AlignRight;
+            TextAligned.DrawTextAligned(font, Resource1.PressRToRestart, new Vector2((Width * x), (Height * 0.7f)), Fontsize, 0,alignment,
                 ((timer / 30) % 2 == 0) ? Color.SKYBLUE : Color.BLUE);
-            DawTextAligned.DrawTextAligned(font, Resource1.PressBToReturnToMenu, new Vector2((Width * x), (Height *0.77f)), Fontsize, 0,alignment,
+            TextAligned.DrawTextAligned(font, Resource1.PressBToReturnToMenu, new Vector2((Width * x), (Height *0.77f)), Fontsize, 0,alignment,
                 ((timer / 30) % 2 == 1) ? Color.SKYBLUE : Color.BLUE);
-            DawTextAligned.DrawTextAligned(font, string.Format(Resource1.Score, score), new Vector2((Width * x), (Height *0.85f)), Fontsize, 0, alignment,
+            TextAligned.DrawTextAligned(font, string.Format(Resource1.Score, score), new Vector2((Width * x), (Height *0.85f)), Fontsize, 0, alignment,
                 Color.SKYBLUE);
-            DawTextAligned.DrawTextAligned(font, string.Format(Resource1.MaxScore, maxscore), new Vector2((Width * x), (Height *0.92f)),
+            TextAligned.DrawTextAligned(font, string.Format(Resource1.MaxScore, maxscore), new Vector2((Width * x), (Height *0.92f)),
                 Fontsize, 0, alignment, Color.SKYBLUE);
 
             timer++;
@@ -433,7 +438,7 @@ public class Program
 
         var y = Height - (timer % scroll);
 
-        DawTextAligned.DrawTextAligned(font, creditText, new Vector2(Width * 0.5f,y),Fontsize,Spacing, DawTextAligned.AlignCenter,Color.MAGENTA);
+        TextAligned.DrawTextAligned(font, creditText, new Vector2(Width * 0.5f,y),Fontsize,Spacing, TextAligned.AlignCenter,Color.MAGENTA);
 
         var overlay = Fontsize * 2;
 
@@ -470,6 +475,11 @@ public class Program
         {
             playerposition = playerposition with { X = MathF.Floor(MathF.Min(Width - character.width * 0.5f, playerposition.X + movement)) };
         }
+        if (IsKeyPressed(KeyboardKey.KEY_SPACE))
+        {
+            preservedtimer = timer;
+            gamestate = GameState.Paused;
+        }
         UpdateMusicStream(stageMusic);
         DrawTexture(stageBackground, 0, 0, Color.WHITE);
 
@@ -480,6 +490,29 @@ public class Program
 
         timer++;
 
+    }
+
+    private void Paused()
+    {
+        if (timer == 0)
+        {
+            StopMusicStream(stageMusic);
+            PlayMusicStream(stageMusic);
+            playerposition = new Vector2(MathF.Floor(Width * .5f - character.width * 0.5f), 500);
+        }
+        if (IsKeyPressed(KeyboardKey.KEY_SPACE))
+        {
+            timer = preservedtimer;
+            gamestate = GameState.Stage;
+        }
+
+        UpdateMusicStream(stageMusic);
+        DrawTexture(stageBackground, 0, 0, Color.WHITE);
+
+        if ((timer / 20) % 2 == 0)
+            TextAligned.DrawTextAligned(font, "PAUSED", new Vector2(Width/2, Height/2), Fontsize, 0, TextAligned.AlignCenter, Color.SKYBLUE);
+
+        timer++;
     }
 
     private void UpdateBombs()
